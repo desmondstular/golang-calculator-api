@@ -20,6 +20,9 @@ func main() {
     // Home handler
     mux.HandleFunc("GET /", homeHandler)
 
+    // Operation routes
+    mux.HandleFunc("POST /add", addHandler)
+
     // Decode handler test
     mux.HandleFunc("POST /decode", decodeHandler)
 
@@ -30,6 +33,21 @@ func main() {
 func homeHandler(w http.ResponseWriter, r *http.Request) {
     w.WriteHeader(http.StatusOK)
     fmt.Fprintf(w, "Path %s : received GET", r.URL.Path)
+}
+
+func addHandler(w http.ResponseWriter, r *http.Request) {
+    var n Numbers
+    var value int
+
+    err := json.NewDecoder(r.Body).Decode(&n)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+    }
+
+    value = n.A + n.B
+
+    fmt.Fprintf(w, "%v\n", value)
 }
 
 func decodeHandler(w http.ResponseWriter, r *http.Request) {

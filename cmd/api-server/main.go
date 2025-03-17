@@ -23,6 +23,7 @@ func main() {
     // Operation routes
     mux.HandleFunc("POST /add", addHandler)
     mux.HandleFunc("POST /subtract", subtractHandler)
+    mux.HandleFunc("POST /multiply", multiplyHandler)
 
     // Decode handler test
     mux.HandleFunc("POST /decode", decodeHandler)
@@ -66,7 +67,7 @@ func subtractHandler(w http.ResponseWriter, r *http.Request) {
     fmt.Fprintf(w, "%v\n", value)
 }
 
-func subtractHandler(w http.ResponseWriter, r *http.Request) {
+func multiplyHandler(w http.ResponseWriter, r *http.Request) {
     var n Numbers
     var value int
 
@@ -76,7 +77,7 @@ func subtractHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    value = n.A - n.B
+    value = n.A * n.B
 
     fmt.Fprintf(w, "%v\n", value)
 }

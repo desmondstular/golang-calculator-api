@@ -22,6 +22,7 @@ func main() {
 
     // Operation routes
     mux.HandleFunc("POST /add", addHandler)
+    mux.HandleFunc("POST /subtract", subtractHandler)
 
     // Decode handler test
     mux.HandleFunc("POST /decode", decodeHandler)
@@ -46,6 +47,36 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
     }
 
     value = n.A + n.B
+
+    fmt.Fprintf(w, "%v\n", value)
+}
+
+func subtractHandler(w http.ResponseWriter, r *http.Request) {
+    var n Numbers
+    var value int
+
+    err := json.NewDecoder(r.Body).Decode(&n)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+    }
+
+    value = n.A - n.B
+
+    fmt.Fprintf(w, "%v\n", value)
+}
+
+func subtractHandler(w http.ResponseWriter, r *http.Request) {
+    var n Numbers
+    var value int
+
+    err := json.NewDecoder(r.Body).Decode(&n)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+    }
+
+    value = n.A - n.B
 
     fmt.Fprintf(w, "%v\n", value)
 }

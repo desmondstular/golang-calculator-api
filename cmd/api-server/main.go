@@ -10,8 +10,8 @@ import (
 const Port = ":8080"
 
 type Numbers struct {
-    A int
-    B int
+    A float32
+    B float32
 }
 
 func main() {
@@ -24,6 +24,7 @@ func main() {
     mux.HandleFunc("POST /add", addHandler)
     mux.HandleFunc("POST /subtract", subtractHandler)
     mux.HandleFunc("POST /multiply", multiplyHandler)
+    mux.HandleFunc("POST /divide", divideHandler)
 
     // Decode handler test
     mux.HandleFunc("POST /decode", decodeHandler)
@@ -39,7 +40,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 
 func addHandler(w http.ResponseWriter, r *http.Request) {
     var n Numbers
-    var value int
+    var value float32
 
     err := json.NewDecoder(r.Body).Decode(&n)
     if err != nil {
@@ -54,7 +55,7 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 
 func subtractHandler(w http.ResponseWriter, r *http.Request) {
     var n Numbers
-    var value int
+    var value float32
 
     err := json.NewDecoder(r.Body).Decode(&n)
     if err != nil {
@@ -69,7 +70,7 @@ func subtractHandler(w http.ResponseWriter, r *http.Request) {
 
 func multiplyHandler(w http.ResponseWriter, r *http.Request) {
     var n Numbers
-    var value int
+    var value float32
 
     err := json.NewDecoder(r.Body).Decode(&n)
     if err != nil {
@@ -78,6 +79,27 @@ func multiplyHandler(w http.ResponseWriter, r *http.Request) {
     }
 
     value = n.A * n.B
+
+    fmt.Fprintf(w, "%v\n", value)
+}
+
+func divideHandler(w http.ResponseWriter, r *http.Request) {
+    var n Numbers
+    var value float32
+
+    err := json.NewDecoder(r.Body).Decode(&n)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+    }
+
+    // Cannot divide by zero
+    if n.B == 0 {
+        http.Error(w, "Unable to divide by zero", http.StatusBadRequest)
+        return
+    }
+
+    value = n.A / n.B
 
     fmt.Fprintf(w, "%v\n", value)
 }
